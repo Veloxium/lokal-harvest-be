@@ -27,18 +27,19 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: Prisma.UserUpdateInput) {
-    return this.databaseService.user.update({ where: { id: id.toString() }, data: updateUserDto });
+    try {
+      const password = updateUserDto.password as string;
+      const hash = await argon2.hash(password);
+      updateUserDto.password = hash;
+      return this.databaseService.user.update({ where: { id: id.toString() }, data: updateUserDto });
+    }
+    catch (error) {
+      throw new Error('Error while hashing the password');
+    }
   }
 
   async remove(id: string) {
     return this.databaseService.user.delete({ where: { id: id.toString() } });
-  }
-
-  async login(loginDto: { email: string, password: string }) {
-    const user = await this.databaseService.user.findUnique({ where: { email: loginDto.email } });
-    if (!user) throw new Error('User not found');
-    if (await argon2.verify(user.password, loginDto.password)) return user;
-    throw new Error('Invalid password');
   }
 
 }
