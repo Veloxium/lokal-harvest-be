@@ -11,7 +11,7 @@ export class ProductsService {
   }
 
   async findAll() {
-    return await this.databaseService.product.findMany(
+    const products = await this.databaseService.product.findMany(
       {
         include: {
           store: {
@@ -22,6 +22,13 @@ export class ProductsService {
         }
       }
     );
+
+    const count = await this.databaseService.product.count();
+
+    return {
+      count,
+      products
+    }
   }
 
   async findOne(id: string) {
