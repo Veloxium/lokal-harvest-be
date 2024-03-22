@@ -44,6 +44,18 @@ export class ProductsService {
     );
   }
 
+  async findCat(cat: string) {
+    const products = await this.databaseService.product.findMany({
+      where: {
+        category: cat
+      }
+    });
+    if (!products || products.length === 0) {
+      return { message: 'No products found for the specified category.' };
+    }
+    return products;
+  }
+
   async update(id: string, updateProductDto: Prisma.ProductUpdateInput) {
     return this.databaseService.product.update({
       where: {
