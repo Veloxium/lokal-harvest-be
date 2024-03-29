@@ -20,7 +20,10 @@ export class AuthService {
   async login(loginDto: { email: string, password: string }) {
     const user = await this.databaseService.user.findUnique({ where: { email: loginDto.email } });
     if (!user) throw new Error('User not found');
-    if (await argon2.verify(user.password, loginDto.password)) return user;
+    if (await argon2.verify(user.password, loginDto.password)){
+      const { password, ...result } = user;
+      return result;
+    };
     throw new Error('Invalid password');
   }
 }
