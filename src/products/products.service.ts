@@ -23,12 +23,9 @@ export class ProductsService {
       }
     );
 
-    const count = await this.databaseService.product.count();
+    // const count = await this.databaseService.product.count();
 
-    return {
-      count,
-      products
-    }
+    return products;
   }
 
   async findOne(id: string) {
@@ -50,9 +47,6 @@ export class ProductsService {
         category: cat
       }
     });
-    if (!products || products.length === 0) {
-      return { message: 'No products found for the specified category.' };
-    }
     return products;
   }
 
