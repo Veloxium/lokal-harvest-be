@@ -4,10 +4,11 @@ import { Prisma } from '@prisma/client';
 
 @Controller('carts')
 export class CartsController {
-  constructor(private readonly cartsService: CartsService) {}
+  constructor(private readonly cartsService: CartsService) { }
 
   @Post()
-  create(@Body() createCartDto: Prisma.CartCreateInput) {
+  create(@Body() createCartDto: { userId: string, productId: string, quantity: number }) {
+    createCartDto.quantity = Number(createCartDto.quantity);
     return this.cartsService.create(createCartDto);
   }
 
@@ -17,8 +18,8 @@ export class CartsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartsService.findOne(id);
+  findbyId(@Param('id') id: string) {
+    return this.cartsService.findbyId(id);
   }
 
   @Patch(':id')
