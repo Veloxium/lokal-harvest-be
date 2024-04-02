@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CartsService } from './carts.service';
 import { Prisma } from '@prisma/client';
 
@@ -13,22 +13,19 @@ export class CartsController {
   }
 
   @Get()
+  findbyId(@Query('userId') id: string) {
+    return this.cartsService.findbyId(id);
+  }
+
+  @Get()
   findAll() {
     return this.cartsService.findAll();
   }
 
-  @Get(':id')
-  findbyId(@Param('id') id: string) {
-    return this.cartsService.findbyId(id);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: Prisma.CartUpdateInput) {
-    return this.cartsService.update(id, updateCartDto);
+  update(@Param('id') id: string, @Body() { quantity }: { quantity: number }) {
+    quantity = Number(quantity);
+    return this.cartsService.update(id, quantity);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartsService.remove(id);
-  }
 }

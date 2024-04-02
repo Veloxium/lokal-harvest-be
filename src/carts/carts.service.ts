@@ -14,7 +14,6 @@ export class CartsService {
         productId: createCartDto.productId,
       }
     });
-
     if (checkCart) {
       return await this.databaseService.cart.update({
         where: { id: checkCart.id, },
@@ -31,7 +30,7 @@ export class CartsService {
   }
 
   async findbyId(userId: string) {
-    return await this.databaseService.cart.findMany({
+    const items = await this.databaseService.cart.findMany({
       where: { userId, },
       include: {
         product: {
@@ -44,6 +43,7 @@ export class CartsService {
             category: true,
             store: {
               select: {
+                id: true,
                 name: true,
               }
             }
@@ -51,13 +51,35 @@ export class CartsService {
         }
       }
     });
+    return items;
   }
 
-  async update(id: string, updateCartDto: Prisma.CartUpdateInput) {
-    return await this.databaseService.cart.update({
+  async update(id: string, quantity: number) {
+    const checkQuantity = await this.databaseService.cart.findFirst({
       where: { id, },
-      data: updateCartDto,
     });
+    const checkStock = await this.databaseService.product.findFirst({
+      where: { id: checkQuantity.productId, },
+    });
+    if (checkQuantity.quantity + quantity <= 0) {
+      return await this.databaseService.cart.delete({
+        where: { id, },
+      });
+    } else if (checkQuantity.quantity + quantity > checkStock.stock) {
+      return await this.databaseService.cart.update({
+        where: { id, },
+        data: {
+          quantity: checkStock.stock,
+        },
+      });
+    } else {
+      return await this.databaseService.cart.update({
+        where: { id, },
+        data: {
+          quantity: checkQuantity.quantity + quantity,
+        },
+      });
+    }
   }
 
   async remove(id: string) {
