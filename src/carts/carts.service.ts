@@ -76,7 +76,7 @@ export class CartsService {
       return await this.databaseService.cart.update({
         where: { id, },
         data: {
-          quantity: checkQuantity.quantity + quantity,
+          quantity: quantity,
         },
       });
     }
