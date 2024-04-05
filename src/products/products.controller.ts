@@ -4,26 +4,26 @@ import { Prisma } from '@prisma/client';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
+
+  @Post()
+  findByName(@Query('search') search?: string, @Query('cat') cat?: string){
+    return this.productsService.findByNameAndCat(search,cat);
+  }
 
   @Post()
   create(@Body() createProductDto: Prisma.ProductCreateInput) {
     return this.productsService.create(createProductDto);
   }
 
-  @Get()
-  findCat(@Query('cat') cat?: string) {
-    return this.productsService.findCat(cat);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.productsService.findOne(id);
   }
 
   @Get()
   findAll() {
     return this.productsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(id);
   }
 
   @Patch(':id')

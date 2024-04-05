@@ -35,21 +35,32 @@ export class ProductsService {
       },
       include: {
         store: true,
-
       }
     }
     );
   }
 
-  async findCat(cat: string) {
-    const products = await this.databaseService.product.findMany({
-      where: {
-        category: cat
-      }
-    });
-    return products;
+  async findByNameAndCat(search: string, cat: string) {
+    if (search) {
+      const products = await this.databaseService.product.findMany({
+        where: {
+          name: {
+            contains: search,
+            mode: 'insensitive'
+          }
+        }
+      });
+      return products;
+    } else if (cat) {
+      const products = await this.databaseService.product.findMany({
+        where: {
+          category: cat
+        }
+      });
+      return products;
+    }
   }
-
+  
   async update(id: string, updateProductDto: Prisma.ProductUpdateInput) {
     return this.databaseService.product.update({
       where: {
