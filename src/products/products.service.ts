@@ -22,9 +22,6 @@ export class ProductsService {
         }
       }
     );
-
-    // const count = await this.databaseService.product.count();
-
     return products;
   }
 
