@@ -11,18 +11,16 @@ export class ProductsService {
   }
 
   async findAll() {
-    const products = await this.databaseService.product.findMany(
-      {
-        include: {
-          store: {
-            select: {
-              name: true,
-            }
+    return this.databaseService.product.findMany({
+      include: {
+        store: {
+          select: {
+            name: true,
+            id: true
           }
         }
       }
-    );
-    return products;
+    });
   }
 
   async findOne(id: string) {
