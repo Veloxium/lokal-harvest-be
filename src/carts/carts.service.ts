@@ -55,22 +55,17 @@ export class CartsService {
   }
 
   async update(id: string, quantity: number) {
-    const checkQuantity = await this.databaseService.cart.findFirst({
+    const check = await this.databaseService.cart.findFirst({
       where: { id, },
     });
-    const checkStock = await this.databaseService.product.findFirst({
-      where: { id: checkQuantity.productId, },
-    });
-    if (checkQuantity.quantity + quantity <= 0) {
+    if (!check) {
+      return {
+        message: 'Cart not found',
+      };
+    }
+    if (quantity < 1) {
       return await this.databaseService.cart.delete({
         where: { id, },
-      });
-    } else if (checkQuantity.quantity + quantity > checkStock.stock) {
-      return await this.databaseService.cart.update({
-        where: { id, },
-        data: {
-          quantity: checkStock.stock,
-        },
       });
     } else {
       return await this.databaseService.cart.update({

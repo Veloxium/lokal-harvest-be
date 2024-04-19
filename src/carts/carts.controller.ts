@@ -23,9 +23,9 @@ export class CartsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() { quantity }: { quantity: number }) {
-    quantity = Number(quantity);
-    return this.cartsService.update(id, quantity);
+  update(@Param('id') id: string, @Body() { quantity }: { quantity: string }) {
+    const parseQuantity = Number(quantity);
+    return this.cartsService.update(id,  parseQuantity);
   }
 
 }
