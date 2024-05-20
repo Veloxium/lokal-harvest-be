@@ -31,7 +31,14 @@ export class ProductsService {
         id: id.toString()
       },
       include: {
-        store: true,
+        store: {
+          select: {
+            id: true,
+            name: true,
+            address: true,
+            image: true,
+          }
+        },
       }
     }
     );
@@ -45,6 +52,16 @@ export class ProductsService {
             contains: search,
             mode: 'insensitive'
           }
+        },
+        include: {
+          store: {
+            select: {
+              id: true,
+              name: true,
+              address: true,
+              image: true,
+            }
+          }
         }
       });
       return products;
@@ -52,6 +69,16 @@ export class ProductsService {
       const products = await this.databaseService.product.findMany({
         where: {
           category: cat
+        },
+        include: {
+          store: {
+            select: {
+              id: true,
+              name: true,
+              address: true,
+              image: true,
+            }
+          }
         }
       });
       return products;
