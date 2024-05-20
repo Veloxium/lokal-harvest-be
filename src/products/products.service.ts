@@ -15,8 +15,10 @@ export class ProductsService {
       include: {
         store: {
           select: {
+            id: true,
             name: true,
-            id: true
+            address: true,
+            image: true,
           }
         }
       }
